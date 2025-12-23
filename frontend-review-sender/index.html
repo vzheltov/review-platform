@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Отзыв</title>
+
+    <link rel="stylesheet" href="/src/styles/style.css" />
+    <script type="module" src="/src/ts/main.ts"></script>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <!--header -->
+    <header class="main-header">
+      <div class="header">
+        <div class="time-box">
+          <span id="time">10:35</span>
+          <span id="date-string" class="date-string">23 октября</span>
+        </div>
+        <span>
+          <button class="lang-change" data-lang="ru">RU</button>
+          <button class="lang-change" data-lang="zh">ZH</button>
+        </span>
+      </div>
+    </header>
+    <main>
+      <h1 class="main-title">Ваш Отзыв</h1>
+      <form class="layout review-form">
+        <div class="stars stars-container">
+          <button
+            type="button"
+            class="star"
+            data-value="1"
+            aria-label="Оценка: 1 звезда"
+          >
+            <svg class="star-icon">
+              <use href="/images/icons/star.svg#icon-star"></use>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="star"
+            data-value="2"
+            aria-label="Оценка: 2 звезды"
+          >
+            <svg class="star-icon">
+              <use href="/images/icons/star.svg#icon-star"></use>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="star"
+            data-value="3"
+            aria-label="Оценка: 3 звезды"
+          >
+            <svg class="star-icon">
+              <use href="/images/icons/star.svg#icon-star"></use>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="star"
+            data-value="4"
+            aria-label="Оценка: 4 звезды"
+          >
+            <svg class="star-icon">
+              <use href="/images/icons/star.svg#icon-star"></use>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="star"
+            data-value="5"
+            aria-label="Оценка: 5 звезд"
+          >
+            <svg class="star-icon">
+              <use href="/images/icons/star.svg#icon-star"></use>
+            </svg>
+          </button>
+        </div>
+
+        <textarea
+          class="review input"
+          rows="3"
+          placeholder="Напишите отзыв"
+        ></textarea>
+
+        <button type="submit" class="review-btn" disabled>
+          Отправить отзыв
+        </button>
+      </form>
+    </main>
+    <div id="dialog-window" class="modal-overlay hidden">
+      <div class="modal-window">
+        <h2 class="modal-title">Отзыв отправлен</h2>
+        <p class="modal-text">
+          Остальные вкладки закрыты.<br />
+          Переход к таблице через
+          <span id="timer-count" class="timer-text">10</span> сек.
+        </p>
+        <div class="modal-actions">
+          <button id="modal-cancel" class="btn-cancel">Отмена</button>
+          <button id="modal-go" class="btn-go">Перейти</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

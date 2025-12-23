@@ -1,0 +1,29 @@
+:root {
+  --color-body-bg: #111827;
+  --color-body-txt: #f9fafb;
+  --color-header-default: #1f2937;
+  --color-header-click: #374151;
+  --color-header-space: #4b5563;
+  --color-header-scroll: #111827;
+
+  --color-border-default: #374151;
+
+  --color-lang-bg: #374151;
+  --color-input-bg: #1f2937;
+
+  --color-btn-disabled: #4b5563;
+  --color-btn-active: #22c55e;
+
+  --color-modal-overlay: rgba(0, 0, 0, 0.85); /* Затемнение фона */
+  --color-text-accent: #38bdf8;
+
+  --color-star-default: #4b5563;
+  --color-star-hover-first: #ffaeae;
+  --color-star-active-first: #ca2121;
+  --color-star-hover-last: #a5fda5;
+  --color-star-active-last: #00ff00;
+  --color-star-hover-middle: #fcfcab;
+  --color-star-active-middle: #ffff00;
+  --color-bg-black: #000000;
+  --color-white: #ffffff;
+}

@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Bricolage";
+  src: url("/fonts/Bricolage.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Bricolage", sans-serif;
+  --color-gray-900: #111827;
+}
+
+/* input,
+button,
+textarea,
+select {
+  font-family: var(--font-sans);
+
+  background-color: var(--color-gray-900);
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */

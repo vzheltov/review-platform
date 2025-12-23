@@ -1,0 +1,48 @@
+@font-face {
+  font-family: 'Bricolage';
+  font-style: normal;
+
+  font-weight: 200 800;
+  font-display: swap;
+
+  src: url('/fonts/Bricolage.ttf') format('truetype');
+}
+
+* {
+  box-sizing: border-box;
+
+  font-family: 'Bricolage', sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+
+  font-size: 62.5%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+
+  background-color: #111827;
+  color: #ffffff;
+
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  flex-grow: 1;
+}
+
+.main-title {
+  font-size: 7rem;
+  color: #ffffff;
+  text-align: center;
+
+  font-weight: 800;
+}

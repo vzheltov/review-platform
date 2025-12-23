@@ -1,0 +1,23 @@
+.main-header {
+  background: var(--color-header-default);
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--color-border-default);
+  transition:
+    background 0.5s ease,
+    color 0.5s ease;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 4rem;
+  max-width: 140rem;
+  margin: 0 auto;
+}
+.time-box,
+.date-box {
+  font-size: 4rem;
+  color: var(--color-body-txt);
+  opacity: 0.8;
+  font-weight: 500;
+}

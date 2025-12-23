@@ -1,0 +1,13 @@
+networks:
+  my-app-network:
+    external: true
+services:
+  frontend-form:
+    build: .
+    container_name: frontend_form
+    expose:
+      - '80'
+    networks:
+      - my-app-network
+    environment:
+      - VITE_API_URL=http://localhost:1414/api
