@@ -1,29 +1,40 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import axios from "axios";
-import type { Review } from "../components/types"; // Убедитесь, что путь к типам верный
+import { ENDPOINTS } from "../config"; // Убедитесь, что config.ts создан
+import type { Review } from "../components/types";
 
 interface ReviewState {
-  // --- Стандартные поля ---
+  // Основные параметры
   page: number;
-  limit: number;
+  limit: number; // <--- Нужно для исправления ошибок
   search: string;
   isExact: boolean;
   isCaseSensitive: boolean;
   isInfinite: boolean;
-  useTanStack: boolean;
-  useVirtualizer: boolean;
 
+  // Настройки движка таблицы (Исправляет ваши ошибки на скриншоте)
+  useTanStack: boolean; // <--- Было пропущено
+  useVirtualizer: boolean; // <--- Было пропущено
+
+  // Источник данных
   dataSource: "db" | "zustand";
-
   localReviews: Review[];
   isLocalLoading: boolean;
 
+  // Модальное окно
+  activeReview: Review | null;
+
+  // Actions (Функции)
   setPage: (page: number) => void;
+  setLimit: (limit: number) => void; // <--- Нужно для исправления ошибок
   setSearch: (search: string) => void;
+  setActiveReview: (review: Review | null) => void;
+
   toggleExact: () => void;
   toggleCaseSensitive: () => void;
   toggleInfinite: () => void;
+
   toggleTanStack: () => void;
   toggleVirtualizer: () => void;
 
@@ -41,20 +52,25 @@ export const useZustand = create<ReviewState>()(
     isExact: false,
     isCaseSensitive: false,
     isInfinite: false,
-    useTanStack: false,
-    useVirtualizer: false,
+
+    useTanStack: false, // <--- Добавлено
+    useVirtualizer: false, // <--- Добавлено
 
     dataSource: "db",
     localReviews: [],
     isLocalLoading: false,
+    activeReview: null,
 
     setPage: (page) => set({ page }),
+    setLimit: (limit) => set({ limit, page: 1 }),
     setSearch: (search) => set({ search, page: 1 }),
+    setActiveReview: (review) => set({ activeReview: review }),
 
     toggleExact: () => set((state) => ({ isExact: !state.isExact, page: 1 })),
     toggleCaseSensitive: () =>
       set((state) => ({ isCaseSensitive: !state.isCaseSensitive, page: 1 })),
     toggleInfinite: () => set((state) => ({ isInfinite: !state.isInfinite })),
+
     toggleTanStack: () => set((state) => ({ useTanStack: !state.useTanStack })),
     toggleVirtualizer: () =>
       set((state) => ({ useVirtualizer: !state.useVirtualizer })),
@@ -68,8 +84,8 @@ export const useZustand = create<ReviewState>()(
     fetchLocalData: async () => {
       set({ isLocalLoading: true });
       try {
-        const response = await axios.get("http://localhost:1414/api/reviews", {
-          params: { limit: 10000, page: 1 }, //без этого all
+        const response = await axios.get(ENDPOINTS.REVIEWS, {
+          params: { limit: "all" },
         });
         set({ localReviews: response.data.data, isLocalLoading: false });
       } catch (error) {

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useZustand } from "../store/useZustand";
+import { ENDPOINTS } from "../config"; // <-- Новый импорт
 import type { Review } from "../components/types";
 
 type ApiResponse = {
@@ -14,7 +15,7 @@ type ApiResponse = {
 export const useReviewData = () => {
   const {
     page,
-    limit,
+    limit, // <-- Берем лимит из стора
     search,
     isExact,
     isCaseSensitive,
@@ -29,20 +30,18 @@ export const useReviewData = () => {
 
   // --- 1. Функция запроса к серверу ---
   const fetchReviews = async (pageParam: number) => {
-    const response = await axios.get<ApiResponse>(
-      "http://localhost:1414/api/reviews",
-      {
-        params: {
-          page: pageParam,
-          limit,
-          search,
-          searchType: isExact ? "exact" : "partial",
-          caseSensitive: isCaseSensitive,
-          sortBy: "id",
-          order: "desc",
-        },
-      }
-    );
+    // Используем ENDPOINTS.REVIEWS
+    const response = await axios.get<ApiResponse>(ENDPOINTS.REVIEWS, {
+      params: {
+        page: pageParam,
+        limit, // <-- Передаем динамический лимит
+        search,
+        searchType: isExact ? "exact" : "partial",
+        caseSensitive: isCaseSensitive,
+        sortBy: "id",
+        order: "desc",
+      },
+    });
     return response.data;
   };
 
@@ -52,6 +51,7 @@ export const useReviewData = () => {
     isLoading: isDbLoadingP,
     isError: isDbErrorP,
   } = useQuery({
+    // Добавляем limit в ключ кэша, чтобы при смене лимита шел рефетч
     queryKey: ["reviews", page, search, isExact, isCaseSensitive, limit],
     queryFn: () => fetchReviews(page),
     placeholderData: (prev) => prev,
@@ -77,7 +77,7 @@ export const useReviewData = () => {
     enabled: isInfinite && !isZustandMode,
   });
 
-  // --- 4. Логика Zustand (In-Memory) ---
+  // --- 4. Логика Zustand (оставляем как было, просто копируем логику слайсов) ---
   const zustandProcessedData = useMemo(() => {
     if (!isZustandMode) return { data: [], total: 0 };
 
@@ -115,29 +115,23 @@ export const useReviewData = () => {
     isZustandMode,
   ]);
 
-  // --- 5. Сборка результатов ---
   const reviewsPaginated = isZustandMode
     ? zustandProcessedData.data
     : dbPaginateData?.data || [];
-
   const allInfiniteRows = isZustandMode
     ? zustandProcessedData.data
     : dbInfiniteData?.pages.flatMap((p) => p.data) || [];
-
   const totalDBItems = isZustandMode
     ? zustandProcessedData.total
     : isInfinite
     ? dbInfiniteData?.pages[0]?.total || 0
     : dbPaginateData?.total || 0;
-
   const totalPages = Math.ceil(totalDBItems / limit) || 1;
-
   const isLoading = isZustandMode
     ? isLocalLoading
     : isInfinite
     ? isDbLoadingI
     : isDbLoadingP;
-
   const isError = isZustandMode ? false : isInfinite ? isDbErrorI : isDbErrorP;
 
   const fetchNextPage = () => {
@@ -161,5 +155,6 @@ export const useReviewData = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    searchQuery: search,
   };
 };

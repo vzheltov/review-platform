@@ -7,6 +7,7 @@ import {
 import { StarRating } from "../ui/StarRating";
 import { ReviewContent } from "../ui/ReviewContent";
 import type { Review } from "./types";
+import { getBadgeStyle } from "../utils/GetBadgeStyle";
 
 const columnHelper = createColumnHelper<Review>();
 
@@ -33,21 +34,16 @@ const TanStackTable = ({
     columnHelper.accessor("rating", {
       header: "Рейтинг",
       cell: (info) => {
-        const r = info.getValue();
-        const s =
-          r >= 4
-            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-            : r === 3
-            ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-            : "bg-rose-500/10 text-rose-400 border-rose-500/20";
         return (
           <div className="flex items-center gap-3 whitespace-nowrap">
             <span
-              className={`px-2.5 py-1 rounded-md text-xs border font-mono ${s}`}
+              className={`px-2.5 py-1 rounded-md text-xs border font-mono ${getBadgeStyle(
+                info.getValue()
+              )}`}
             >
-              {r} / 5
+              {info.getValue()} / 5
             </span>
-            <StarRating rating={r} />
+            <StarRating rating={info.getValue()} />
           </div>
         );
       },
@@ -60,6 +56,7 @@ const TanStackTable = ({
           highlight={searchQuery}
           mode={searchMode}
           caseSensitive={isCaseSensitive}
+          fullReviewObject={info.row.original}
         />
       ),
     }),
@@ -80,7 +77,7 @@ const TanStackTable = ({
               {g.headers.map((h) => (
                 <th
                   key={h.id}
-                  className="px-8 flex items-center h-full w-auto first:w-24 nth-[2]:w-48 last:flex-1"
+                  className="px-8 flex items-center justify-center h-full w-auto first:w-24 nth-[2]:w-48 last:flex-1"
                 >
                   {flexRender(h.column.columnDef.header, h.getContext())}
                 </th>
@@ -92,12 +89,12 @@ const TanStackTable = ({
           {table.getRowModel().rows.map((row) => (
             <tr
               key={row.id}
-              className="h-[100px] hover:bg-white/5 transition-colors group flex w-full"
+              className="h-row hover:bg-white/5 transition-colors group flex w-full"
             >
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="px-8 h-full flex items-center py-1 w-auto first:w-24 nth-[2]:w-48 last:flex-1 last:overflow-hidden first:justify-center"
+                  className="px-8 h-full flex items-center justify-center py-1 w-auto first:w-24 nth-[2]:w-48 last:flex-1 last:overflow-hidden first:justify-center"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

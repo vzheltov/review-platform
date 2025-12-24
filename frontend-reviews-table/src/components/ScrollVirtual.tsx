@@ -8,7 +8,9 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { StarRating } from "../ui/StarRating";
 import { ReviewContent } from "../ui/ReviewContent";
+import { remToPx } from "../utils/RemToPx";
 import type { Review } from "./types";
+import { getBadgeStyle } from "../utils/GetBadgeStyle";
 
 interface Props {
   data: Review[];
@@ -22,6 +24,7 @@ interface Props {
 }
 
 const columnHelper = createColumnHelper<Review>();
+const ROW_HEIGHT_REM = 6.25;
 
 const ScrollVirtual = ({
   data,
@@ -34,6 +37,8 @@ const ScrollVirtual = ({
   isCaseSensitive,
 }: Props) => {
   const parentRef = useRef<HTMLDivElement>(null);
+
+  const rowHeightPx = remToPx(ROW_HEIGHT_REM);
 
   const columns = useMemo(
     () => [
@@ -75,11 +80,12 @@ const ScrollVirtual = ({
             highlight={searchQuery}
             mode={searchMode}
             caseSensitive={isCaseSensitive}
+            fullReviewObject={info.row.original}
           />
         ),
       }),
     ],
-    [searchQuery, searchMode]
+    [searchQuery, searchMode, isCaseSensitive]
   );
 
   const table = useReactTable({
@@ -93,7 +99,7 @@ const ScrollVirtual = ({
   const rowVirtualizer = useVirtualizer({
     count: totalCount,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 100,
+    estimateSize: () => rowHeightPx,
     overscan: 3,
   });
   const virtualItems = rowVirtualizer.getVirtualItems();
@@ -115,20 +121,13 @@ const ScrollVirtual = ({
     virtualItems,
   ]);
 
-  const getBadgeStyle = (r: number) =>
-    r >= 4
-      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-      : r === 3
-      ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-      : "bg-rose-500/10 text-rose-400 border-rose-500/20";
-
   return (
     <div
       ref={parentRef}
       className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent"
     >
       <table className="w-full text-left text-sm border-collapse table-fixed">
-        <thead className="bg-blue-900/30  text-xl uppercase font-mono sticky top-0 z-10 border-b border-emerald-500/10 backdrop-blur-xl shadow-lg">
+        <thead className="bg-blue-900/30 text-xl uppercase font-mono sticky top-0 z-10 border-b border-emerald-500/10 backdrop-blur-xl shadow-lg">
           {useTanStackRender ? (
             table.getHeaderGroups().map((g) => (
               <tr key={g.id}>
@@ -165,7 +164,7 @@ const ScrollVirtual = ({
                     key={row.id}
                     data-index={virtualRow.index}
                     ref={rowVirtualizer.measureElement}
-                    className="h-[100px] hover:bg-white/5 transition-colors group"
+                    className="h-row hover:bg-white/5 transition-colors group"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td key={cell.id} className="px-8 py-4 align-middle pt-5">
@@ -185,7 +184,7 @@ const ScrollVirtual = ({
                     key={review.id}
                     data-index={virtualRow.index}
                     ref={rowVirtualizer.measureElement}
-                    className="h-32 hover:bg-white/5 transition-colors group"
+                    className="h-row hover:bg-white/5 transition-colors group"
                   >
                     <td className="px-8 py-4 text-slate-500 font-mono text-xl align-middle pt-5">
                       #{review.id}
@@ -208,6 +207,7 @@ const ScrollVirtual = ({
                         highlight={searchQuery}
                         mode={searchMode}
                         caseSensitive={isCaseSensitive}
+                        fullReviewObject={review}
                       />
                     </td>
                   </tr>

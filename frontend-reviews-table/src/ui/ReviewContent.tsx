@@ -1,38 +1,47 @@
 import { useState, useRef, useLayoutEffect } from "react";
 import { HighlightText } from "./highlightText";
+import { useZustand } from "../store/useZustand";
+import type { Review } from "../components/types";
+
+const MAX_HEIGHT_REM = 3.5;
+
+interface ReviewContentProps {
+  text: string;
+  highlight: string;
+  mode: "partial" | "exact";
+  caseSensitive: boolean;
+  fullReviewObject: Review;
+}
 
 export const ReviewContent = ({
   text,
   highlight,
   mode,
   caseSensitive,
-}: {
-  text: string;
-  highlight: string;
-  mode: "partial" | "exact";
-  caseSensitive: boolean;
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  fullReviewObject,
+}: ReviewContentProps) => {
   const [showButton, setShowButton] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
+  const { setActiveReview } = useZustand();
 
   useLayoutEffect(() => {
     const element = textRef.current;
     if (!element) return;
-    if (!isExpanded) {
-      const isOverflowing = element.scrollHeight > element.clientHeight + 1;
-      setShowButton(isOverflowing);
-    }
-  }, [text, isExpanded]);
+    const isOverflowing = element.scrollHeight > element.clientHeight;
+    setShowButton(isOverflowing);
+  }, [text]);
+
+  const handleOpenModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveReview(fullReviewObject);
+  };
 
   return (
-    <div className="flex flex-col justify-center w-full h-full overflow-hidden">
+    <div className="flex flex-col justify-start w-full h-full relative group">
       <div
         ref={textRef}
-        className={`text-slate-300 text-sm font-light leading-snug whitespace-normal break-all w-full transition-all scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent ${
-          !isExpanded ? "line-clamp-3" : "h-full overflow-y-auto pr-2"
-        }`}
-        title={!isExpanded && showButton ? text : ""}
+        style={{ maxHeight: `${MAX_HEIGHT_REM}rem` }}
+        className="text-slate-300 text-sm font-light leading-snug whitespace-normal break-all w-full overflow-hidden relative"
       >
         <HighlightText
           text={text}
@@ -40,17 +49,17 @@ export const ReviewContent = ({
           mode={mode}
           caseSensitive={caseSensitive}
         />
+        {showButton && (
+          <div className="absolute bottom-0 left-0 w-full h-4 bg-linear-to-t from-slate-900/40 to-transparent pointer-events-none" />
+        )}
       </div>
 
-      {(showButton || isExpanded) && (
+      {showButton && (
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsExpanded(!isExpanded);
-          }}
-          className="text-emerald-500 text-xs font-bold hover:text-emerald-400 border-b border-transparent hover:border-emerald-400 transition-colors cursor-pointer select-none mt-0.5 w-max shrink-0"
+          onClick={handleOpenModal}
+          className="text-emerald-500 text-xs font-bold hover:text-emerald-400 hover:underline mt-1 w-max transition-colors cursor-pointer select-none"
         >
-          {isExpanded ? "Свернуть" : "Подробнее..."}
+          Подробнее...
         </button>
       )}
     </div>

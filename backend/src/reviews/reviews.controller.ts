@@ -1,9 +1,11 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { Prisma } from '@prisma/client';
+
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
+
   @Get()
   findAll(
     @Query('page') page: string = '1',
@@ -14,10 +16,11 @@ export class ReviewsController {
     @Query('sortBy') sortBy: string = 'id',
     @Query('order') order: 'asc' | 'desc' = 'desc',
   ) {
-    const pageNumber = parseInt(page);
-    const limitNumber = parseInt(limit);
+    const isAll = limit === 'all'; // Проверяем флаг "все"
+
     const mode =
       caseSensitive === 'true' ? undefined : Prisma.QueryMode.insensitive;
+
     let where: Prisma.ReviewWhereInput = {};
     if (search) {
       const tmp_word = search.trim();
@@ -36,6 +39,19 @@ export class ReviewsController {
     }
     const orderBy = { [sortBy]: order };
 
+    // Если нужен "all", передаем undefined в take и skip
+    if (isAll) {
+      return this.reviewsService.findAll({
+        where,
+        orderBy,
+        // take и skip не передаем (будут undefined)
+      });
+    }
+
+    // Иначе стандартная пагинация
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+
     return this.reviewsService.findAll({
       where,
       skip: (pageNumber - 1) * limitNumber,
@@ -43,6 +59,7 @@ export class ReviewsController {
       orderBy,
     });
   }
+
   @Post()
   create(@Body() body: { text: string; rating: number }) {
     return this.reviewsService.create(body);

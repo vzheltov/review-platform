@@ -11,6 +11,7 @@
 @theme {
   --font-sans: "Bricolage", sans-serif;
   --color-gray-900: #111827;
+  --spacing-row: 6.25rem;
 }
 
 /* input,

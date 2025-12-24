@@ -1,6 +1,7 @@
 import { StarRating } from "../ui/StarRating";
 import { ReviewContent } from "../ui/ReviewContent";
 import type { Review } from "./types";
+import { getBadgeStyle } from "../utils/GetBadgeStyle";
 
 const NativeTable = ({
   data,
@@ -13,13 +14,6 @@ const NativeTable = ({
   searchMode: "partial" | "exact";
   isCaseSensitive: boolean;
 }) => {
-  const getBadgeStyle = (r: number) =>
-    r >= 4
-      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-      : r === 3
-      ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-      : "bg-rose-500/10 text-rose-400 border-rose-500/20";
-
   return (
     <div className="w-full h-full overflow-hidden flex flex-col">
       <table className="min-w-full text-left text-sm border-collapse table-fixed w-full">
@@ -34,7 +28,7 @@ const NativeTable = ({
           {data.map((review) => (
             <tr
               key={review.id}
-              className="h-[100px] hover:bg-white/5 transition-colors group flex w-full"
+              className="h-row hover:bg-white/5 transition-colors group flex w-full"
             >
               <td className="px-8 h-full flex items-center justify-center w-24 text-slate-500 font-mono text-xl">
                 #{review.id}
@@ -51,12 +45,13 @@ const NativeTable = ({
                   <StarRating rating={review.rating} />
                 </div>
               </td>
-              <td className="px-8 h-full flex items-center flex-1 overflow-hidden py-1">
+              <td className="px-8 h-full flex items-center justify-center flex-1 overflow-hidden py-1">
                 <ReviewContent
                   text={review.text}
                   highlight={searchQuery}
                   mode={searchMode}
                   caseSensitive={isCaseSensitive}
+                  fullReviewObject={review}
                 />
               </td>
             </tr>

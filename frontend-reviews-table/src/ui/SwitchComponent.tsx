@@ -1,31 +1,40 @@
-interface SwitchProps {
-  label: string;
-  isChecked: boolean;
+interface SwitchComponentProps {
+  leftLabel: string;
+  rightLabel: string;
+  isRightActive: boolean;
   onChange: () => void;
 }
-const SwitchComponent = ({ label, isChecked, onChange }: SwitchProps) => (
-  <label className="flex items-center justify-between cursor-pointer group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5 select-none">
-    <span className="text-sm font-medium text-slate-400 group-hover:text-emerald-300 transition-colors">
-      {label}
-    </span>
-    <div className="relative flex items-center ml-4">
-      <input
-        type="checkbox"
-        className="sr-only"
-        checked={isChecked}
-        onChange={onChange}
+
+export const SwitchComponent = ({
+  leftLabel,
+  rightLabel,
+  isRightActive,
+  onChange,
+}: SwitchComponentProps) => {
+  return (
+    <div
+      onClick={onChange}
+      className="relative flex w-full bg-slate-800 rounded-lg p-1 cursor-pointer select-none border border-slate-700 h-10"
+    >
+      <div
+        className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-emerald-600/80 rounded-md shadow-md transition-all duration-300 ease-out ${
+          isRightActive ? "translate-x-[calc(100%+4px)]" : "translate-x-0"
+        }`}
       />
       <div
-        className={`w-11 h-6 rounded-full transition-colors duration-300 ${
-          isChecked ? "bg-emerald-600 shadow-inner" : "bg-slate-700"
+        className={`flex-1 flex items-center justify-center text-xs font-mono font-bold z-10 transition-colors duration-300 ${
+          !isRightActive ? "text-white" : "text-slate-500"
         }`}
-      ></div>
+      >
+        {leftLabel}
+      </div>
       <div
-        className={`absolute left-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-300 ${
-          isChecked ? "translate-x-5" : "translate-x-0"
+        className={`flex-1 flex items-center justify-center text-xs font-mono font-bold z-10 transition-colors duration-300 ${
+          isRightActive ? "text-white" : "text-slate-500"
         }`}
-      ></div>
+      >
+        {rightLabel}
+      </div>
     </div>
-  </label>
-);
-export default SwitchComponent;
+  );
+};

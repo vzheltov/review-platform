@@ -7,7 +7,9 @@ import {
 } from "@tanstack/react-table";
 import { StarRating } from "../ui/StarRating";
 import { ReviewContent } from "../ui/ReviewContent";
+import { remToPx } from "../utils/RemToPx";
 import type { Review } from "./types";
+import { getBadgeStyle } from "../utils/GetBadgeStyle";
 
 interface Props {
   data: Review[];
@@ -20,7 +22,8 @@ interface Props {
   isCaseSensitive: boolean;
 }
 
-const ROW_HEIGHT = 100;
+const ROW_HEIGHT_REM = 6.25;
+
 const columnHelper = createColumnHelper<Review>();
 
 const ScrollCustom = ({
@@ -35,6 +38,8 @@ const ScrollCustom = ({
 }: Props) => {
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const rowHeightPx = remToPx(ROW_HEIGHT_REM);
 
   const columns = useMemo(
     () => [
@@ -76,11 +81,12 @@ const ScrollCustom = ({
             highlight={searchQuery}
             mode={searchMode}
             caseSensitive={isCaseSensitive}
+            fullReviewObject={info.row.original}
           />
         ),
       }),
     ],
-    [searchQuery, searchMode]
+    [searchQuery, searchMode, isCaseSensitive]
   );
 
   const table = useReactTable({
@@ -105,24 +111,15 @@ const ScrollCustom = ({
     }
   };
 
-  const startIndex = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - 2);
+  const startIndex = Math.max(0, Math.floor(scrollTop / rowHeightPx) - 2);
   const endIndex = Math.min(
     totalCount,
-    Math.ceil((scrollTop + 500) / ROW_HEIGHT) + 2
+    Math.ceil((scrollTop + 500) / rowHeightPx) + 2
   );
 
-  const paddingTop = startIndex * ROW_HEIGHT;
-
-  const extraHeight = hasNextPage ? 100 : 0;
-
-  const paddingBottom = (totalCount - endIndex) * ROW_HEIGHT + extraHeight;
-
-  const getBadgeStyle = (r: number) =>
-    r >= 4
-      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-      : r === 3
-      ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-      : "bg-rose-500/10 text-rose-400 border-rose-500/20";
+  const paddingTop = startIndex * rowHeightPx;
+  const extraHeight = hasNextPage ? rowHeightPx : 0;
+  const paddingBottom = (totalCount - endIndex) * rowHeightPx + extraHeight;
 
   return (
     <div
@@ -160,11 +157,12 @@ const ScrollCustom = ({
               <td style={{ height: paddingTop, display: "block" }} />
             </tr>
           )}
+
           {useTanStackRender
             ? tableRows.slice(startIndex, endIndex).map((row) => (
                 <tr
                   key={row.id}
-                  className="h-[100px] hover:bg-white/5 transition-colors group flex w-full"
+                  className="h-row hover:bg-white/5 transition-colors group flex w-full"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
@@ -182,7 +180,7 @@ const ScrollCustom = ({
             : data.slice(startIndex, endIndex).map((review) => (
                 <tr
                   key={review.id}
-                  className="h-[100px] hover:bg-white/5 transition-colors group flex w-full"
+                  className="h-row hover:bg-white/5 transition-colors group flex w-full"
                 >
                   <td className="px-8 h-full flex items-center justify-center w-24 text-slate-500 font-mono text-xl">
                     #{review.id}
@@ -199,16 +197,18 @@ const ScrollCustom = ({
                       <StarRating rating={review.rating} />
                     </div>
                   </td>
-                  <td className="px-8 h-full flex items-center flex-1 overflow-hidden py-1">
+                  <td className="px-8 h-full flex items-center justify-center flex-1 overflow-hidden py-1">
                     <ReviewContent
                       text={review.text}
                       highlight={searchQuery}
                       mode={searchMode}
                       caseSensitive={isCaseSensitive}
+                      fullReviewObject={review}
                     />
                   </td>
                 </tr>
               ))}
+
           {paddingBottom > 0 && (
             <tr>
               <td style={{ height: paddingBottom, display: "block" }}>

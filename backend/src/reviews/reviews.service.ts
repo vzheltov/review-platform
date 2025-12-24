@@ -23,11 +23,12 @@ export class ReviewsService {
     where?: Prisma.ReviewWhereInput;
     orderBy?: Prisma.ReviewOrderByWithRelationInput;
   }) {
-    const { skip, take = 1, cursor, where, orderBy } = params;
+    // take по умолчанию убираем из деструктуризации, чтобы он мог быть undefined
+    const { skip, take, cursor, where, orderBy } = params;
 
     const reviews = await this.prisma.review.findMany({
       skip,
-      take,
+      take, // Если undefined, Prisma вернет всё
       cursor,
       where,
       orderBy,
@@ -35,11 +36,12 @@ export class ReviewsService {
 
     const total = await this.prisma.review.count({ where });
 
+    // Если take не передан (режим 'all'), то лимит равен общему кол-ву, и мы на 1 странице
     return {
       data: reviews,
       total,
-      page: skip ? Math.floor(skip / take) + 1 : 1,
-      limit: take,
+      page: take ? (skip ? Math.floor(skip / take) + 1 : 1) : 1,
+      limit: take || total,
     };
   }
 }
