@@ -15,7 +15,7 @@ const NativeTable = ({
   isCaseSensitive: boolean;
 }) => {
   return (
-    <div className="w-full h-full pb-2">
+    <div className="w-full h-full">
       <table className="w-full text-left text-sm border-collapse table-fixed">
         <thead className="h-16 bg-slate-800/80 text-slate-300 text-lg uppercase font-mono backdrop-blur-xl sticky top-0 z-20 shadow-lg block w-full border-b border-white/5">
           <tr className="flex w-full h-full">

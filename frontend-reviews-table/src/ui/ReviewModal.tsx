@@ -47,7 +47,7 @@ export const ReviewModal = () => {
           </div>
           <button
             onClick={() => setActiveReview(null)}
-            className="text-slate-400 hover:text-white transition-colors text-2xl leading-none"
+            className="text-slate-400 hover:text-white cursor-pointer transition-colors text-2xl leading-none"
           >
             &times;
           </button>
@@ -60,7 +60,7 @@ export const ReviewModal = () => {
         <div className="p-4 border-t border-white/5 bg-slate-800/30 flex justify-end">
           <button
             onClick={() => setActiveReview(null)}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-medium transition-colors border border-white/5"
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 cursor-pointer text-white rounded-lg text-sm font-medium transition-colors border border-white/5"
           >
             Закрыть
           </button>

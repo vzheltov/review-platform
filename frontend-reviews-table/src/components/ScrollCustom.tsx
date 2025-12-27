@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useLayoutEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -38,6 +38,13 @@ const ScrollCustom = ({
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const rowHeightPx = remToPx(ROW_HEIGHT_REM);
+  const [containerHeight, setContainerHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      setContainerHeight(containerRef.current.clientHeight);
+    }
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -109,7 +116,7 @@ const ScrollCustom = ({
   const startIndex = Math.max(0, Math.floor(scrollTop / rowHeightPx) - 2);
   const endIndex = Math.min(
     totalCount,
-    Math.ceil((scrollTop + 500) / rowHeightPx) + 2
+    Math.ceil((scrollTop + containerHeight) / rowHeightPx) + 2
   );
   const paddingTop = startIndex * rowHeightPx;
   const extraHeight = hasNextPage ? rowHeightPx : 0;
@@ -122,7 +129,7 @@ const ScrollCustom = ({
       className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent"
     >
       <table className="w-full text-left text-sm border-collapse table-fixed">
-        <thead className="h-16 bg-lime-900/30 text-lime-400 text-lg uppercase font-mono sticky top-0 z-10 border-b border-lime-500/20 backdrop-blur-xl shadow-lg block w-full">
+        <thead className="h-16 bg-emerald-900 text-slate-300 text-lg uppercase font-mono sticky top-0 z-10 block w-full">
           {useTanStackRender ? (
             table.getHeaderGroups().map((g) => (
               <tr key={g.id} className="flex w-full h-full">

@@ -127,7 +127,7 @@ const ScrollVirtual = ({
       className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent"
     >
       <table className="w-full text-left text-sm border-collapse table-fixed">
-        <thead className="bg-blue-900/30 text-xl uppercase font-mono sticky top-0 z-10 border-b border-emerald-500/10 backdrop-blur-xl shadow-lg">
+        <thead className="h-16 bg-blue-900 text-slate-300 text-lg uppercase font-mono sticky top-0 z-10 border-b  border-blue-500/20  shadow-lg">
           {useTanStackRender ? (
             table.getHeaderGroups().map((g) => (
               <tr key={g.id}>
