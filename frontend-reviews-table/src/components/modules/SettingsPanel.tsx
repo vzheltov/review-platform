@@ -11,7 +11,6 @@ export const SettingsPanel = ({ isVisible }: { isVisible: boolean }) => {
     toggleVirtualizer,
     dataSource,
     toggleDataSource,
-    // limit и setLimit здесь больше не нужны
   } = useZustand();
 
   const isZustandMode = dataSource === "zustand";
@@ -29,8 +28,6 @@ export const SettingsPanel = ({ isVisible }: { isVisible: boolean }) => {
           🛠 Параметры
         </h2>
         <div className="space-y-6">
-          {/* БЛОК С ЛИМИТОМ УДАЛЕН - ОН ТЕПЕРЬ АВТОМАТИЧЕСКИЙ */}
-
           <div className="space-y-2">
             <div className="text-xs font-mono text-emerald-500 uppercase tracking-widest">
               Источник

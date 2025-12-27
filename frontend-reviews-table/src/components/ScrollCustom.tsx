@@ -23,7 +23,6 @@ interface Props {
 }
 
 const ROW_HEIGHT_REM = 6.25;
-
 const columnHelper = createColumnHelper<Review>();
 
 const ScrollCustom = ({
@@ -38,7 +37,6 @@ const ScrollCustom = ({
 }: Props) => {
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const rowHeightPx = remToPx(ROW_HEIGHT_REM);
 
   const columns = useMemo(
@@ -55,16 +53,12 @@ const ScrollCustom = ({
         header: "Рейтинг",
         cell: (info) => {
           const r = info.getValue();
-          const s =
-            r >= 4
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-              : r === 3
-              ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-              : "bg-rose-500/10 text-rose-400 border-rose-500/20";
           return (
             <div className="flex items-center gap-3 whitespace-nowrap">
               <span
-                className={`px-2.5 py-1 rounded-md text-xs border font-mono ${s}`}
+                className={`px-2.5 py-1 rounded-md text-xs border font-mono ${getBadgeStyle(
+                  r
+                )}`}
               >
                 {r} / 5
               </span>
@@ -76,13 +70,15 @@ const ScrollCustom = ({
       columnHelper.accessor("text", {
         header: "Отзыв",
         cell: (info) => (
-          <ReviewContent
-            text={info.getValue()}
-            highlight={searchQuery}
-            mode={searchMode}
-            caseSensitive={isCaseSensitive}
-            fullReviewObject={info.row.original}
-          />
+          <div className="inline-block leading-normal">
+            <ReviewContent
+              text={info.getValue()}
+              highlight={searchQuery}
+              mode={searchMode}
+              caseSensitive={isCaseSensitive}
+              fullReviewObject={info.row.original}
+            />
+          </div>
         ),
       }),
     ],
@@ -101,7 +97,6 @@ const ScrollCustom = ({
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     setScrollTop(e.currentTarget.scrollTop);
     const { scrollHeight, scrollTop, clientHeight } = e.currentTarget;
-
     if (
       scrollHeight - scrollTop - clientHeight < 200 &&
       hasNextPage &&
@@ -116,7 +111,6 @@ const ScrollCustom = ({
     totalCount,
     Math.ceil((scrollTop + 500) / rowHeightPx) + 2
   );
-
   const paddingTop = startIndex * rowHeightPx;
   const extraHeight = hasNextPage ? rowHeightPx : 0;
   const paddingBottom = (totalCount - endIndex) * rowHeightPx + extraHeight;
@@ -167,7 +161,7 @@ const ScrollCustom = ({
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="px-8 h-full flex items-center py-1 w-auto first:w-24 nth-[2]:w-48 last:flex-1 last:overflow-hidden first:justify-center"
+                      className="px-8 h-full flex items-center py-1 w-auto first:w-24 nth-[2]:w-48 last:flex-1 first:justify-center"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -197,14 +191,16 @@ const ScrollCustom = ({
                       <StarRating rating={review.rating} />
                     </div>
                   </td>
-                  <td className="px-8 h-full flex items-center justify-center flex-1 overflow-hidden py-1">
-                    <ReviewContent
-                      text={review.text}
-                      highlight={searchQuery}
-                      mode={searchMode}
-                      caseSensitive={isCaseSensitive}
-                      fullReviewObject={review}
-                    />
+                  <td className="px-8 h-full flex items-center flex-1">
+                    <div className="inline-block leading-normal">
+                      <ReviewContent
+                        text={review.text}
+                        highlight={searchQuery}
+                        mode={searchMode}
+                        caseSensitive={isCaseSensitive}
+                        fullReviewObject={review}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -225,4 +221,5 @@ const ScrollCustom = ({
     </div>
   );
 };
+
 export default ScrollCustom;

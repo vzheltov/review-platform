@@ -16,7 +16,7 @@ export class ReviewsController {
     @Query('sortBy') sortBy: string = 'id',
     @Query('order') order: 'asc' | 'desc' = 'desc',
   ) {
-    const isAll = limit === 'all'; // Проверяем флаг "все"
+    const isAll = limit === 'all';
 
     const mode =
       caseSensitive === 'true' ? undefined : Prisma.QueryMode.insensitive;
@@ -39,16 +39,13 @@ export class ReviewsController {
     }
     const orderBy = { [sortBy]: order };
 
-    // Если нужен "all", передаем undefined в take и skip
     if (isAll) {
       return this.reviewsService.findAll({
         where,
         orderBy,
-        // take и skip не передаем (будут undefined)
       });
     }
 
-    // Иначе стандартная пагинация
     const pageNumber = parseInt(page);
     const limitNumber = parseInt(limit);
 

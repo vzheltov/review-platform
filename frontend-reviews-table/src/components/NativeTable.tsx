@@ -15,8 +15,8 @@ const NativeTable = ({
   isCaseSensitive: boolean;
 }) => {
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col">
-      <table className="min-w-full text-left text-sm border-collapse table-fixed w-full">
+    <div className="w-full h-full pb-2">
+      <table className="w-full text-left text-sm border-collapse table-fixed">
         <thead className="h-16 bg-slate-800/80 text-slate-300 text-lg uppercase font-mono backdrop-blur-xl sticky top-0 z-20 shadow-lg block w-full border-b border-white/5">
           <tr className="flex w-full h-full">
             <th className="px-8 flex items-center w-24 h-full">ID</th>
@@ -24,6 +24,7 @@ const NativeTable = ({
             <th className="px-8 flex items-center flex-1 h-full">Отзыв</th>
           </tr>
         </thead>
+
         <tbody className="block w-full divide-y divide-white/5">
           {data.map((review) => (
             <tr
@@ -33,6 +34,7 @@ const NativeTable = ({
               <td className="px-8 h-full flex items-center justify-center w-24 text-slate-500 font-mono text-xl">
                 #{review.id}
               </td>
+
               <td className="px-8 h-full flex items-center w-48">
                 <div className="flex items-center gap-3 whitespace-nowrap">
                   <span
@@ -45,17 +47,21 @@ const NativeTable = ({
                   <StarRating rating={review.rating} />
                 </div>
               </td>
-              <td className="px-8 h-full flex items-center justify-center flex-1 overflow-hidden py-1">
-                <ReviewContent
-                  text={review.text}
-                  highlight={searchQuery}
-                  mode={searchMode}
-                  caseSensitive={isCaseSensitive}
-                  fullReviewObject={review}
-                />
+
+              <td className="px-8 h-full flex items-center flex-1">
+                <div className="inline-block leading-normal">
+                  <ReviewContent
+                    text={review.text}
+                    highlight={searchQuery}
+                    mode={searchMode}
+                    caseSensitive={isCaseSensitive}
+                    fullReviewObject={review}
+                  />
+                </div>
               </td>
             </tr>
           ))}
+
           {data.length === 0 && (
             <tr className="flex w-full">
               <td className="p-16 w-full text-center text-slate-500 italic">
@@ -68,4 +74,5 @@ const NativeTable = ({
     </div>
   );
 };
+
 export default NativeTable;

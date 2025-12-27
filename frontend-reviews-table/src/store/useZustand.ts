@@ -1,33 +1,30 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import axios from "axios";
-import { ENDPOINTS } from "../config"; // Убедитесь, что config.ts создан
+import { ENDPOINTS } from "../config"; 
 import type { Review } from "../components/types";
 
 interface ReviewState {
-  // Основные параметры
+ 
   page: number;
-  limit: number; // <--- Нужно для исправления ошибок
+  limit: number; 
   search: string;
   isExact: boolean;
   isCaseSensitive: boolean;
   isInfinite: boolean;
 
-  // Настройки движка таблицы (Исправляет ваши ошибки на скриншоте)
-  useTanStack: boolean; // <--- Было пропущено
-  useVirtualizer: boolean; // <--- Было пропущено
+  useTanStack: boolean;
+  useVirtualizer: boolean;
 
-  // Источник данных
   dataSource: "db" | "zustand";
   localReviews: Review[];
   isLocalLoading: boolean;
 
-  // Модальное окно
   activeReview: Review | null;
 
-  // Actions (Функции)
+ 
   setPage: (page: number) => void;
-  setLimit: (limit: number) => void; // <--- Нужно для исправления ошибок
+  setLimit: (limit: number) => void; 
   setSearch: (search: string) => void;
   setActiveReview: (review: Review | null) => void;
 
@@ -53,8 +50,8 @@ export const useZustand = create<ReviewState>()(
     isCaseSensitive: false,
     isInfinite: false,
 
-    useTanStack: false, // <--- Добавлено
-    useVirtualizer: false, // <--- Добавлено
+    useTanStack: false, 
+    useVirtualizer: false,
 
     dataSource: "db",
     localReviews: [],
