@@ -1,7 +1,7 @@
-import NativeTable from "../NativeTable";
-import TanStackTable from "../TanStackTable";
-import ScrollCustom from "../ScrollCustom";
-import ScrollVirtual from "../ScrollVirtual";
+import NativeTable from "../pages/NativeTable";
+import TanStackTable from "../pages/TanStackTable";
+import ScrollCustom from "../pages/ScrollCustom";
+import ScrollVirtual from "../pages/ScrollVirtual";
 import { useZustand } from "../../store/useZustand";
 import type { Review } from "../types";
 

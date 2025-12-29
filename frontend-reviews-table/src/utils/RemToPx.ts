@@ -6,3 +6,5 @@ export const getRemValue = (): number => {
 export const remToPx = (rem: number): number => {
   return rem * getRemValue();
 };
+
+export const ROW_HEIGHT_REM = 6.25;

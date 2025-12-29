@@ -1,5 +1,5 @@
 import { useState, useRef, useLayoutEffect } from "react";
-import { HighlightText } from "./highlightText";
+import { HighlightText } from "./HighlightText";
 import { useZustand } from "../store/useZustand";
 import type { Review } from "../components/types";
 

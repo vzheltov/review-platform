@@ -6,9 +6,9 @@ import { SettingsPanel } from "./modules/SettingsPanel";
 import { TableView } from "./modules/TableView";
 import { PaginationBar } from "./modules/PaginationBar";
 import { ReviewModal } from "../ui/ReviewModal";
-import { remToPx } from "../utils/RemToPx";
+import { remToPx, ROW_HEIGHT_REM } from "../utils/RemToPx";
 
-const ROW_HEIGHT_REM = 6.25;
+const HEADER_HEIGHT_REM = 4;
 
 const TableContainer = () => {
   const [showSettings, setShowSettings] = useState(false);
@@ -22,10 +22,19 @@ const TableContainer = () => {
 
     const calculateAutoLimit = (entries: ResizeObserverEntry[]) => {
       const rowHeightPx = remToPx(ROW_HEIGHT_REM);
+      const headerHeightPx = remToPx(HEADER_HEIGHT_REM);
 
       for (const entry of entries) {
         const containerHeight = entry.contentRect.height;
-        let newLimit = Math.floor(containerHeight / rowHeightPx);
+
+        // ВАЖНО: Вычитаем высоту хедера из общей высоты контейнера
+        const availableHeight = containerHeight - headerHeightPx;
+
+        // Дополнительно вычитаем 1-2 пикселя для "дыхания" границ,
+        // чтобы нижний бордер последней строки точно не резался
+        const safeHeight = Math.max(0, availableHeight - 2);
+
+        let newLimit = Math.floor(safeHeight / rowHeightPx);
         if (newLimit < 3) newLimit = 3;
 
         setLimit(newLimit);
@@ -33,7 +42,8 @@ const TableContainer = () => {
     };
 
     const observer = new ResizeObserver((entries) => {
-      const timer = setTimeout(() => calculateAutoLimit(entries), 150);
+      // Небольшая задержка, чтобы интерфейс не дергался при ресайзе
+      const timer = setTimeout(() => calculateAutoLimit(entries), 100);
       return () => clearTimeout(timer);
     });
 

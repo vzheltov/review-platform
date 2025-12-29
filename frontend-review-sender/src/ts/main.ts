@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setRating(newRating: number) {
       if (this._rating === newRating) return;
       this._rating = newRating;
-      clearReviewField();
       this._notify();
     },
 

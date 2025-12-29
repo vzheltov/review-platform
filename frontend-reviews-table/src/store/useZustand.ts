@@ -1,13 +1,12 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import axios from "axios";
-import { ENDPOINTS } from "../config"; 
+import { ENDPOINTS } from "../config";
 import type { Review } from "../components/types";
 
 interface ReviewState {
- 
   page: number;
-  limit: number; 
+  limit: number;
   search: string;
   isExact: boolean;
   isCaseSensitive: boolean;
@@ -22,9 +21,8 @@ interface ReviewState {
 
   activeReview: Review | null;
 
- 
   setPage: (page: number) => void;
-  setLimit: (limit: number) => void; 
+  setLimit: (limit: number) => void;
   setSearch: (search: string) => void;
   setActiveReview: (review: Review | null) => void;
 
@@ -50,7 +48,7 @@ export const useZustand = create<ReviewState>()(
     isCaseSensitive: false,
     isInfinite: false,
 
-    useTanStack: false, 
+    useTanStack: false,
     useVirtualizer: false,
 
     dataSource: "db",

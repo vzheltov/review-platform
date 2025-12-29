@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useZustand } from "../store/useZustand";
-import { ENDPOINTS } from "../config"; // <-- Новый импорт
+import { ENDPOINTS } from "../config";
 import type { Review } from "../components/types";
 
 type ApiResponse = {
@@ -15,7 +15,7 @@ type ApiResponse = {
 export const useReviewData = () => {
   const {
     page,
-    limit, // <-- Берем лимит из стора
+    limit,
     search,
     isExact,
     isCaseSensitive,
@@ -30,11 +30,10 @@ export const useReviewData = () => {
 
   // --- 1. Функция запроса к серверу ---
   const fetchReviews = async (pageParam: number) => {
-    // Используем ENDPOINTS.REVIEWS
     const response = await axios.get<ApiResponse>(ENDPOINTS.REVIEWS, {
       params: {
         page: pageParam,
-        limit, // <-- Передаем динамический лимит
+        limit,
         search,
         searchType: isExact ? "exact" : "partial",
         caseSensitive: isCaseSensitive,
@@ -51,7 +50,6 @@ export const useReviewData = () => {
     isLoading: isDbLoadingP,
     isError: isDbErrorP,
   } = useQuery({
-    // Добавляем limit в ключ кэша, чтобы при смене лимита шел рефетч
     queryKey: ["reviews", page, search, isExact, isCaseSensitive, limit],
     queryFn: () => fetchReviews(page),
     placeholderData: (prev) => prev,
@@ -77,7 +75,7 @@ export const useReviewData = () => {
     enabled: isInfinite && !isZustandMode,
   });
 
-  // --- 4. Логика Zustand (оставляем как было, просто копируем логику слайсов) ---
+  // --- 4. Логика Zustand ---
   const zustandProcessedData = useMemo(() => {
     if (!isZustandMode) return { data: [], total: 0 };
 
