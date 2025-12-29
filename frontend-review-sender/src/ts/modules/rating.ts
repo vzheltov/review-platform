@@ -22,7 +22,8 @@ export function initStars(elements: InitStarsElements, state: AppState): void {
       } catch (error) {
         console.error('failed save', error);
       }
-      state.setRating(newRating);
+
+      state.setRating(newRating, true);
     }
   });
 }

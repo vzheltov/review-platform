@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dateStringEl: document.getElementById('date-string'),
     langButtons: document.querySelectorAll<HTMLButtonElement>('.lang-change'),
   };
+
   function clearReviewField(): void {
     if (elements.reviewText) {
       elements.reviewText.value = '';
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Failed to remove review text from localStorage:', error);
     }
   }
+
   const state = {
     _rating: 0,
     _listeners: [] as (() => void)[],
@@ -40,9 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return this._rating;
     },
 
-    setRating(newRating: number) {
+    setRating(newRating: number, shouldClearText: boolean = false) {
       if (this._rating === newRating) return;
       this._rating = newRating;
+
+      if (shouldClearText) {
+        clearReviewField();
+      }
+
       this._notify();
     },
 
@@ -54,7 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
       this._listeners.forEach((listener) => listener());
     },
   };
+
   const LOW_RATING = 3;
+
   function updateUI(): void {
     const currentRating = state.getRating();
     if (elements.starsContainer) {
@@ -77,33 +86,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+
     const isLowRating = currentRating > 0 && currentRating <= LOW_RATING;
+
     if (elements.reviewForm) {
       elements.reviewForm.classList.toggle('low-rating', isLowRating);
     }
+
     const isTextNeed = isLowRating;
     let hasText = false;
+
     if (elements.reviewText && elements.reviewText.value) {
       hasText = elements.reviewText.value.trim() !== '';
       elements.reviewText.style.height = 'auto';
       elements.reviewText.style.height = `${elements.reviewText.scrollHeight}px`;
     }
+
     let isBtnEnabled = false;
     if (currentRating > 0) {
       isBtnEnabled = isTextNeed ? hasText : true;
     }
+
     if (elements.reviewBtn) {
       elements.reviewBtn.disabled = !isBtnEnabled;
     }
   }
+
   state.subscribe(updateUI);
 
   const headerConfig = { resetDelayMs: 500 };
   initHeader(elements.header, headerConfig);
+
   initStars({ starsContainer: elements.starsContainer }, state);
+
   const reviewConfig = {
     textSyncDelayMs: 1000,
   };
+
   initReview(
     {
       reviewForm: elements.reviewForm,
@@ -114,8 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
     state,
     updateUI,
   );
+
   initFavicon(elements.favicon);
   initSyncAndLoad({ reviewText: elements.reviewText }, state, updateUI);
+
   const clockConfig = {
     syncIntervalMs: 10000,
   };
@@ -127,5 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     clockConfig,
   );
+
   updateUI();
 });
