@@ -5,7 +5,6 @@ import { useReviewData } from "../../hooks/useReviewData";
 import { TableLayout } from "../layot/TableLayout";
 import type { SearchMode } from "../types";
 
-// Исправлены пути к файлам страниц
 const NativeTable = lazy(() => import("./NativeTable"));
 const TanStackTable = lazy(() => import("./TanStackTable"));
 const ScrollCustom = lazy(() => import("./ScrollCustom"));
@@ -29,8 +28,6 @@ const ReviewTable = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-    // Достаем общее количество для правильной работы скролла
-    totalDBItems,
   } = useReviewData();
 
   const viewMode = useMemo(() => {
@@ -42,7 +39,6 @@ const ReviewTable = () => {
 
   const currentData = isInfinite ? allInfiniteRows : reviewsPaginated;
 
-  // Явно определяем тип, чтобы не использовать 'as const'
   const searchModeValue: SearchMode = isExact ? "exact" : "partial";
 
   if (isLoading) {
@@ -78,8 +74,6 @@ const ReviewTable = () => {
     hasNextPage: hasNextPage ?? false,
     isFetchingNextPage,
     useTanStackRender: useTanStack,
-    // Передаем количество записей (обязательно для InfiniteTableProps)
-    totalDBItems: totalDBItems || 0,
   };
 
   const renderTable = () => {
