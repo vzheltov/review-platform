@@ -64,7 +64,7 @@ const ScrollCustom = ({
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent"
+      className="h-full w-full overflow-y-auto scroll"
     >
       <table className="w-full text-left text-sm border-collapse">
         <ScrollCustomHeader useTanStack={useTanStackRender} table={table} />

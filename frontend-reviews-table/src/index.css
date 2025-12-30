@@ -9,28 +9,47 @@
 }
 
 @theme {
-  --font-sans: "Bricolage", sans-serif;
-  --color-gray-900: #111827;
+  --font-sans: "Bricolage", ui-sans-serif, system-ui, sans-serif;
+  --color-gray-900: #0f172a;
   --height-row: 6.25rem;
 }
 
 @layer utilities {
-  .scrollbar-custom {
+  .scroll {
+    scrollbar-gutter: stable;
+    scroll-behavior: smooth;
+  }
+
+  .scroll {
     scrollbar-width: thin;
-    scrollbar-color: rgb(71 85 105) transparent;
+    scrollbar-color: rgb(100 116 139 / 0.6) transparent;
   }
 
-  .scrollbar-custom::-webkit-scrollbar {
-    width: 8px;
+  .scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
 
-  .scrollbar-custom::-webkit-scrollbar-track {
+  .scroll::-webkit-scrollbar-track {
     background: transparent;
+    margin: 4px 0;
   }
 
-  .scrollbar-custom::-webkit-scrollbar-thumb {
-    background-color: rgb(71 85 105);
-    border-radius: 4px;
+  .scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      to bottom,
+      rgb(148 163 184 / 0.7),
+      rgb(100 116 139 / 0.8)
+    );
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: all 0.3s ease-out;
+  }
+
+  .scroll:active::-webkit-scrollbar-thumb {
+    background: rgb(16 185 129 / 0.95);
+    background-clip: content-box;
   }
 
   .h-row {

@@ -3,7 +3,7 @@ import TanStackTable from "../pages/TanStackTable";
 import ScrollCustom from "../pages/ScrollCustom";
 import ScrollVirtual from "../pages/ScrollVirtual";
 import { useZustand } from "../../store/useZustand";
-import type { Review } from "../types";
+import type { Review, CommonTableProps, InfiniteTableProps } from "../types";
 
 interface TableViewProps {
   isLoading: boolean;
@@ -52,47 +52,34 @@ export const TableView = ({
   }
 
   if (isInfinite) {
-    if (useVirtualizer) {
-      return (
-        <ScrollVirtual
-          data={allInfiniteRows}
-          searchQuery={searchQuery}
-          searchMode={searchMode}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          useTanStackRender={useTanStack}
-          isCaseSensitive={isCaseSensitive}
-        />
-      );
-    }
-    return (
-      <ScrollCustom
-        data={allInfiniteRows}
-        searchQuery={searchQuery}
-        searchMode={searchMode}
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-        useTanStackRender={useTanStack}
-        isCaseSensitive={isCaseSensitive}
-      />
+    const infiniteProps: InfiniteTableProps = {
+      data: allInfiniteRows,
+      searchQuery,
+      searchMode,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+      useTanStackRender: useTanStack,
+      isCaseSensitive,
+    };
+
+    return useVirtualizer ? (
+      <ScrollVirtual {...infiniteProps} />
+    ) : (
+      <ScrollCustom {...infiniteProps} />
     );
   }
 
+  const commonProps: CommonTableProps = {
+    data: reviewsPaginated,
+    searchQuery,
+    searchMode,
+    isCaseSensitive,
+  };
+
   return useTanStack ? (
-    <TanStackTable
-      data={reviewsPaginated}
-      searchQuery={searchQuery}
-      searchMode={searchMode}
-      isCaseSensitive={isCaseSensitive}
-    />
+    <TanStackTable {...commonProps} />
   ) : (
-    <NativeTable
-      data={reviewsPaginated}
-      searchQuery={searchQuery}
-      searchMode={searchMode}
-      isCaseSensitive={isCaseSensitive}
-    />
+    <NativeTable {...commonProps} />
   );
 };

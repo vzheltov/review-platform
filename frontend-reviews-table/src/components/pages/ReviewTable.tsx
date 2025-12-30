@@ -1,16 +1,17 @@
 import { lazy, Suspense, useMemo } from "react";
 import { useZustand } from "../../store/useZustand";
 import { useReviewData } from "../../hooks/useReviewData";
-// Исправлена опечатка в пути import (layot -> layout)
-import { TableLayout } from "../layot/TableLayout";
 
+import { TableLayout } from "../layot/TableLayout";
+import type { SearchMode } from "../types";
+
+// Исправлены пути к файлам страниц
 const NativeTable = lazy(() => import("./NativeTable"));
 const TanStackTable = lazy(() => import("./TanStackTable"));
 const ScrollCustom = lazy(() => import("./ScrollCustom"));
 const ScrollVirtual = lazy(() => import("./ScrollVirtual"));
 
 const ReviewTable = () => {
-  // 1. Достаем реальные переменные из стора
   const {
     search,
     isExact,
@@ -20,7 +21,6 @@ const ReviewTable = () => {
     useVirtualizer,
   } = useZustand();
 
-  // 2. Достаем данные. Хук возвращает разные массивы для пагинации и скролла
   const {
     reviewsPaginated,
     allInfiniteRows,
@@ -29,9 +29,10 @@ const ReviewTable = () => {
     isFetchingNextPage,
     isLoading,
     isError,
+    // Достаем общее количество для правильной работы скролла
+    totalDBItems,
   } = useReviewData();
 
-  // 3. Вычисляем текущий режим (вместо несуществующего selectedTable)
   const viewMode = useMemo(() => {
     if (isInfinite) {
       return useVirtualizer ? "scroll-virtual" : "scroll-custom";
@@ -39,8 +40,10 @@ const ReviewTable = () => {
     return useTanStack ? "tanstack" : "native";
   }, [isInfinite, useVirtualizer, useTanStack]);
 
-  // 4. Выбираем правильный массив данных
   const currentData = isInfinite ? allInfiniteRows : reviewsPaginated;
+
+  // Явно определяем тип, чтобы не использовать 'as const'
+  const searchModeValue: SearchMode = isExact ? "exact" : "partial";
 
   if (isLoading) {
     return (
@@ -62,21 +65,21 @@ const ReviewTable = () => {
     );
   }
 
-  // Общие пропсы для всех таблиц
   const commonProps = {
     data: currentData,
     searchQuery: search,
-    searchMode: isExact ? ("exact" as const) : ("partial" as const),
+    searchMode: searchModeValue,
     isCaseSensitive,
   };
 
-  // Пропсы специфичные для скролла
   const scrollProps = {
     ...commonProps,
     fetchNextPage,
     hasNextPage: hasNextPage ?? false,
     isFetchingNextPage,
-    useTanStackRender: useTanStack, // Передаем значение флага из стора
+    useTanStackRender: useTanStack,
+    // Передаем количество записей (обязательно для InfiniteTableProps)
+    totalDBItems: totalDBItems || 0,
   };
 
   const renderTable = () => {

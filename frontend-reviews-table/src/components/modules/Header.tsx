@@ -91,7 +91,7 @@ export const Header = ({ onToggleSettings, showSettings }: HeaderProps) => {
                 <span className="text-lg leading-none">
                   {isCaseSensitive ? "✅" : "⬜"}
                 </span>
-                <span className="text-sm font-mono uppercase">Aa</span>
+                <span className="text-sm font-mono">Aa</span>
               </button>
             </div>
             <button

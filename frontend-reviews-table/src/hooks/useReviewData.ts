@@ -28,7 +28,6 @@ export const useReviewData = () => {
 
   const isZustandMode = dataSource === "zustand";
 
-  // --- 1. Функция запроса к серверу ---
   const fetchReviews = async (pageParam: number) => {
     const response = await axios.get<ApiResponse>(ENDPOINTS.REVIEWS, {
       params: {
@@ -44,7 +43,6 @@ export const useReviewData = () => {
     return response.data;
   };
 
-  // --- 2. React Query (Пагинация) ---
   const {
     data: dbPaginateData,
     isLoading: isDbLoadingP,
@@ -56,7 +54,6 @@ export const useReviewData = () => {
     enabled: !isInfinite && !isZustandMode,
   });
 
-  // --- 3. React Query (Бесконечный скролл) ---
   const {
     data: dbInfiniteData,
     fetchNextPage: dbFetchNextPage,
@@ -75,7 +72,6 @@ export const useReviewData = () => {
     enabled: isInfinite && !isZustandMode,
   });
 
-  // --- 4. Логика Zustand ---
   const zustandProcessedData = useMemo(() => {
     if (!isZustandMode) return { data: [], total: 0 };
 

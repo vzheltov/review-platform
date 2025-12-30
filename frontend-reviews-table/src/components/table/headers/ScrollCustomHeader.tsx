@@ -42,7 +42,6 @@ export const ScrollCustomHeader = ({ useTanStack, table }: Props) => {
     );
   }
 
-  // Native версия
   return (
     <thead className={nativeClass}>
       <tr className={TABLE_STYLES.headerInner}>

@@ -60,10 +60,7 @@ const ScrollVirtual = ({
   ]);
 
   return (
-    <div
-      ref={parentRef}
-      className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent relative"
-    >
+    <div ref={parentRef} className="h-full w-full overflow-y-auto scroll">
       <table className="w-full text-left text-sm border-collapse">
         <ScrollVirtualHeader useTanStack={useTanStackRender} table={table} />
 

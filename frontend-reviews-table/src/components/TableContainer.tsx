@@ -27,11 +27,8 @@ const TableContainer = () => {
       for (const entry of entries) {
         const containerHeight = entry.contentRect.height;
 
-        // ВАЖНО: Вычитаем высоту хедера из общей высоты контейнера
         const availableHeight = containerHeight - headerHeightPx;
 
-        // Дополнительно вычитаем 1-2 пикселя для "дыхания" границ,
-        // чтобы нижний бордер последней строки точно не резался
         const safeHeight = Math.max(0, availableHeight - 2);
 
         let newLimit = Math.floor(safeHeight / rowHeightPx);
@@ -42,7 +39,6 @@ const TableContainer = () => {
     };
 
     const observer = new ResizeObserver((entries) => {
-      // Небольшая задержка, чтобы интерфейс не дергался при ресайзе
       const timer = setTimeout(() => calculateAutoLimit(entries), 100);
       return () => clearTimeout(timer);
     });
