@@ -90,12 +90,11 @@ const ReviewTable = () => {
         return <NativeTable {...commonProps} />;
     }
   };
-
   return (
     <TableLayout>
       <Suspense
         fallback={
-          <div className="h-full flex items-center justify-center text-slate-500 text-xl animate-pulse font-mono">
+          <div className="h-full flex items-center justify-center text-slate-500 text-2xl font-mono">
             Загрузка компонента...
           </div>
         }
